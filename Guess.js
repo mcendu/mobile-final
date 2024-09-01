@@ -45,7 +45,7 @@ export default function Guess({ onGuess }) {
         <PegButton index={2} color={guess[2]} dispatch={dispatch} />
         <PegButton index={3} color={guess[3]} dispatch={dispatch} />
       </View>
-      <Pressable style={styles.guessButton} onPress={onGuess}>
+      <Pressable style={styles.guessButton} onPress={() => onGuess(guess)}>
         <Text style={styles.guessButtonLabel}>Guess!</Text>
       </Pressable>
     </View>
