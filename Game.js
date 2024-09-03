@@ -27,6 +27,7 @@ export default class Game {
         for (let j = 0; j < 4; ++j) {
           if (sequence[i] == this.answer[j])
             hits += 1;
+            break;
         }
       }
     }

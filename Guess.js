@@ -24,9 +24,13 @@ const nextColor = Object.freeze({
  * @param {*} param1
  * @returns
  */
-function changePeg(state, { index }) {
+function changePeg(state, { index, newState }) {
   const result = state.slice();
   const current = state[index];
+
+  if (Array.isArray(newState) && newState.length === 4) {
+    return newState;
+  }
 
   if (nextColor[current] === undefined) return state;
 
@@ -34,7 +38,7 @@ function changePeg(state, { index }) {
   return result;
 }
 
-export default function Guess({ onGuess }) {
+export default function Guess({ complete, onGuess, onReset }) {
   const [guess, dispatch] = useReducer(changePeg, ["A", "A", "A", "A"]);
 
   return (
@@ -45,8 +49,18 @@ export default function Guess({ onGuess }) {
         <PegButton index={2} color={guess[2]} dispatch={dispatch} />
         <PegButton index={3} color={guess[3]} dispatch={dispatch} />
       </View>
-      <Pressable style={styles.guessButton} onPress={() => onGuess(guess)}>
-        <Text style={styles.guessButtonLabel}>Guess!</Text>
+      <Pressable
+        style={styles.guessButton}
+        onPress={() => {
+          if (complete) {
+            dispatch({ newState: ["A", "A", "A", "A"] });
+            onReset();
+          } else onGuess(guess);
+        }}
+      >
+        <Text style={styles.guessButtonLabel}>
+          {complete ? "Restart" : "Guess!"}
+        </Text>
       </Pressable>
     </View>
   );

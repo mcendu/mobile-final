@@ -8,6 +8,7 @@ import Game from "./Game";
 export default function App() {
   const game = useRef(new Game());
   const [log, setLog] = useState([]);
+  const [complete, setComplete] = useState(false);
 
   function guess(guess) {
     const mappedGuess = guess.map(
@@ -15,16 +16,26 @@ export default function App() {
     );
     const result = game.current.guess(mappedGuess);
     result.sequence = guess;
+    result.key = log.length;
+
+    if (result.matches === 4)
+      setComplete(true);
 
     const newLog = log.slice();
     newLog.push(result);
     setLog(newLog);
   }
 
+  function reset() {
+    setComplete(false);
+    setLog([]);
+    game.current.start();
+  }
+
   return (
     <View style={styles.container}>
       <Log log={log} />
-      <Guess onGuess={guess} />
+      <Guess onGuess={guess} onReset={reset} complete={complete} />
       <StatusBar style="auto" />
     </View>
   );
