@@ -4,9 +4,17 @@ import Guess from "./Guess";
 import Log from "./Log";
 import { useRef, useState } from "react";
 import Game from "./Game";
+import { useFonts } from "expo-font";
 
 export default function App() {
-  const game = useRef(new Game());
+  useFonts({
+    "MaterialSymbols": require("./assets/fonts/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf"),
+  });
+
+  const game = useRef(null);
+  if (game.current === null)
+    game.current = new Game();
+
   const [log, setLog] = useState([]);
   const [complete, setComplete] = useState(false);
 
@@ -18,8 +26,7 @@ export default function App() {
     result.sequence = guess;
     result.key = log.length;
 
-    if (result.matches === 4)
-      setComplete(true);
+    if (result.matches === 4) setComplete(true);
 
     const newLog = log.slice();
     newLog.push(result);
