@@ -20,14 +20,30 @@ export default class Game {
         `expected array-like object of length 4, received length ${sequence.length}`
       );
 
+    const matched = {
+      guess: [false, false, false, false],
+      answer: [false, false, false, false],
+    };
+
+    // find exact matches
     for (let i = 0; i < 4; ++i) {
       if (sequence[i] == this.answer[i]) {
         matches += 1;
-      } else {
-        for (let j = 0; j < 4; ++j) {
-          if (sequence[i] == this.answer[j])
-            hits += 1;
-            break;
+        matched.guess[i] = true;
+        matched.answer[i] = true;
+      }
+    }
+
+    // find pegs with the correct color at wrong positions (hits)
+    for (let i = 0; i < 4; ++i) {
+      if (matched.guess[i]) continue;
+
+      for (let j = 0; j < 4; ++j) {
+        if (!matched.answer[j] && sequence[i] == this.answer[j]) {
+          hits += 1;
+          matched.guess[i] = true;
+          matched.answer[j] = true;
+          break;
         }
       }
     }
@@ -38,6 +54,7 @@ export default class Game {
       hits,
     };
 
+    console.log(result);
     return result;
   }
 }
